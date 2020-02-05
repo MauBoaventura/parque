@@ -8,6 +8,9 @@ const promo = require("./routes/promo")
 const temas = require("./routes/temas")
 
 const mongoose = require('mongoose');
+require("./models/Evento")
+const Evento = mongoose.model("Eventos")
+
 
 const path = require("path")
 

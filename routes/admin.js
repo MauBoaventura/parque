@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 require("../models/Evento")
 const Evento = mongoose.model("Eventos")
 
-
 router.get('/', (req, res) => {
     res.render("indexAdmin")
 })
@@ -21,13 +20,14 @@ router.post('/addevento', (req, res) => {
         titulo: req.body.titulo,
         descricao: req.body.descricao
     }
+    // console.log(req)
     new Evento(novoEvento).save().then(() => {
         console.log("Categoria salva com sucesso")
     }).catch((err) => {
         console.log("Houve um erro ao salvar o Evento: " + err)
     })
 
-    res.redirect("/")
+    res.redirect("/admin")
 })
 
 router.get('/editevento', (req, res) => {

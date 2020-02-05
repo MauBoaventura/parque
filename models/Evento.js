@@ -1,6 +1,6 @@
-const mongose = require('mongose')
+const mongoose = require('mongoose')
 
-const Schema = mongose.Schema;
+const Schema = mongoose.Schema;
 
 const Evento = new Schema({
     titulo: {
@@ -20,5 +20,4 @@ const Evento = new Schema({
         default: Date.now()
     }
 })
-
-mongose.model("eventos",Evento)
+mongoose.model("Eventos", Evento)
