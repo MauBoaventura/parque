@@ -8,9 +8,6 @@ const promo = require("./routes/promo")
 const temas = require("./routes/temas")
 
 const mongoose = require('mongoose');
-require("./models/Evento")
-const Evento = mongoose.model("Eventos")
-
 
 const path = require("path")
 
@@ -32,13 +29,6 @@ mongoose.connect('mongodb://localhost/siteparque').then(() => {
 }).catch((erro) => {
     console.log("Erro ao se conectar ao banco de dados: " + erro)
 })
-//Trabalhar com arquivos
-app.use(multer({
-    dest: './uploads/',
-    rename: function (fieldname, filename) {
-        return filename;
-    },
-}));
 
 //Rotas
 app.use("/admin", admin)

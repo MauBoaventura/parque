@@ -23,20 +23,20 @@ router.get('/addevento', (req, res) => {
 router.post('/addevento', (req, res) => {
     //req.body.
 
-    newItem.img.contentType = 'image/png';
-    newItem.save();
+    // newItem.img.contentType = 'image/png';
+    //newItem.save();
 
     const novoEvento = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         imagem: {
-            path: fs.readFileSync(req.body.img.userPhoto.path),
-            caption: 'image/png'
+            path: "",//fs.readFileSync(req.body.img.userPhoto.path),
+            caption: ""//'image/png'
         }
     }
     console.log(req)
     new Evento(novoEvento).save().then(() => {
-        console.log("Categoria salva com sucesso")
+        console.log("Evento salvo com sucesso")
     }).catch((err) => {
         console.log("Houve um erro ao salvar o Evento: " + err)
     })
@@ -50,6 +50,24 @@ router.get('/editevento', (req, res) => {
 
 router.get('/addtema', (req, res) => {
     res.render("formularioTemas")
+})
+
+router.post('/addtema', (req, res) => {
+    const novoTema = {
+        titulo: req.body.titulo,
+        descricao: req.body.descricao,
+        imagem: {
+            //path: fs.readFileSync(req.body.img.userPhoto.path),
+            //caption: 'image/png'
+        }
+    }
+    new Tema(novoTema).save().then(() => {
+        console.log("Tema salva com sucesso")
+    }).catch((err) => {
+        console.log("Houve um erro ao salvar o Tema: " + err)
+    })
+
+    res.redirect("/admin")
 })
 
 router.get('/edittema', (req, res) => {
