@@ -2,8 +2,13 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 
+var fs = require('fs');
+var multer = require('multer');
+
 require("../models/Evento")
 const Evento = mongoose.model("Eventos")
+require("../models/Tema")
+const Tema = mongoose.model("Temas")
 
 router.get('/', (req, res) => {
     res.render("indexAdmin")
@@ -16,11 +21,20 @@ router.get('/addevento', (req, res) => {
 
 //Adiciona ao banco de dados um novo evento, se correto
 router.post('/addevento', (req, res) => {
+    //req.body.
+
+    newItem.img.contentType = 'image/png';
+    newItem.save();
+
     const novoEvento = {
         titulo: req.body.titulo,
-        descricao: req.body.descricao
+        descricao: req.body.descricao,
+        imagem: {
+            path: fs.readFileSync(req.body.img.userPhoto.path),
+            caption: 'image/png'
+        }
     }
-    // console.log(req)
+    console.log(req)
     new Evento(novoEvento).save().then(() => {
         console.log("Categoria salva com sucesso")
     }).catch((err) => {

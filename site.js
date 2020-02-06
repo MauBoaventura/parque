@@ -32,6 +32,13 @@ mongoose.connect('mongodb://localhost/siteparque').then(() => {
 }).catch((erro) => {
     console.log("Erro ao se conectar ao banco de dados: " + erro)
 })
+//Trabalhar com arquivos
+app.use(multer({
+    dest: './uploads/',
+    rename: function (fieldname, filename) {
+        return filename;
+    },
+}));
 
 //Rotas
 app.use("/admin", admin)
