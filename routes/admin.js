@@ -16,16 +16,10 @@ router.get('/', (req, res) => {
 
 //Chama tela de adicionar um novo evento
 router.get('/addevento', (req, res) => {
-    res.render("formularioEvento")
+    res.render("formularioEventoAdd")
 })
-
 //Adiciona ao banco de dados um novo evento, se correto
 router.post('/addevento', (req, res) => {
-    //req.body.
-
-    // newItem.img.contentType = 'image/png';
-    //newItem.save();
-
     const novoEvento = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
@@ -45,11 +39,11 @@ router.post('/addevento', (req, res) => {
 })
 
 router.get('/editevento', (req, res) => {
-    res.send("Editar Evento ")
+    res.render("formularioTemasEdit")
 })
 
 router.get('/addtema', (req, res) => {
-    res.render("formularioTemas")
+    res.render("formularioTemasAdd")
 })
 
 router.post('/addtema', (req, res) => {
@@ -71,7 +65,7 @@ router.post('/addtema', (req, res) => {
 })
 
 router.get('/edittema', (req, res) => {
-    res.send("Editar Tema")
+    res.send("formularioTemasEdit")
 })
 
 router.get('/promo', (req, res) => {
