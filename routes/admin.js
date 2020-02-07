@@ -14,11 +14,19 @@ router.get('/', (req, res) => {
     res.render("indexAdmin")
 })
 
+//Tela principal 
+//Lista todos os eventos do banco de dados
+router.get('/evento', (req, res) => {
+    Evento.find().then((eventos) => {
+        res.render("formularioEvento", { evento: eventos })
+    })
+})
+
 //Chama tela de adicionar um novo evento 
 router.get('/addevento', (req, res) => {
     res.render("formularioEventoAdd")
 })
-//Adiciona ao banco de dados um novo evento, se correto
+//Adiciona ao banco de dados um novo evento, caso correto
 router.post('/addevento', (req, res) => {
     const novoEvento = {
         titulo: req.body.titulo,
@@ -33,16 +41,19 @@ router.post('/addevento', (req, res) => {
     }).catch((err) => {
         console.log("Houve um erro ao salvar o Evento: " + err)
     })
-
-    res.redirect("/admin")
+    res.redirect("/admin/evento")
 })
 
-//Listar todos os eventos do banco de dados
-router.get('/editevento', (req, res) => {
-    Evento.find().then((eventos) => {
-        res.render("formularioEventoEdit", { evento: eventos })
+//Tela de edição do evento
+router.get('/editevento/:_id', (req, res) => {
+    Evento.find({ _id: req.params._id }).then((eventos) => {
+        res.render("formularioEventoEdicao", { evento: eventos })
+    }).catch((err) => {
+        console.log("Ocorreu um erro: " + err)
     })
 })
+
+//Edita o evento no banco de dados
 router.post('/editevento', (req, res) => {
     const eventoModificado = {
         _id: req.body.id,
@@ -58,17 +69,18 @@ router.post('/editevento', (req, res) => {
     }).catch((err) => {
         console.log("Houve um erro ao editar o Evento: " + err)
     })
-
-    res.redirect("/admin")
-
+    res.redirect("/admin/evento")
 })
 
-router.get('/editevento/:_id', (req, res) => {
-    Evento.find({ _id: req.params._id }).then((eventos) => {
-        res.render("formularioEventoEdicao", { evento: eventos })
+//Apagar eventos pelo _id
+router.get('/delevento/:_id', (req, res) => {
+    Evento.findOneAndRemove({ _id: req.params._id }).then(() => {
+        console.log("Evento apagado com sucesso")
     }).catch((err) => {
-        console.log("Ocorreu um erro: " + err)
+        console.log("Houve um erro ao apagar o Evento: " + err)
     })
+
+    res.redirect("/admin/evento")
 })
 
 
