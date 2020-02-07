@@ -1,0 +1,22 @@
+<div class="container mt-4">
+  <div class="form-group">
+    <h2 align="center">Temas</h2>
+        <a href="/admin/addtema"> <button type="button" class="btn btn-success">Novo tema</button></a>
+  </div>
+  <ul class="list-unstyled">
+    {{#each tema}}
+    <div class="card w-100 mt-2">
+      <div class="card-body">
+        <h5 class="card-title">Título: {{this.titulo}}</h5>
+        <p class="card-text">Descrição: {{this.descricao}}</p>
+        <a type="button" class="btn btn-primary btn-sm mt-2" href="/admin/edittema/{{this._id}}">Editar</a>
+        <a type="button" class="btn btn-danger btn-sm mt-2" href="/admin/deltema/{{this._id}}">Apagar</a>
+      </div>
+    </div>
+
+    {{else}}
+    <h2>Não há temas</h2>
+    {{/each}}
+  </ul>
+
+</div>

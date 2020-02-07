@@ -26,6 +26,7 @@ router.get('/evento', (req, res) => {
 router.get('/addevento', (req, res) => {
     res.render("formularioEventoAdd")
 })
+
 //Adiciona ao banco de dados um novo evento, caso correto
 router.post('/addevento', (req, res) => {
     const novoEvento = {
@@ -83,11 +84,23 @@ router.get('/delevento/:_id', (req, res) => {
     res.redirect("/admin/evento")
 })
 
+//Tela principal 
+//Lista todos os temas do banco de dados
+router.get('/tema', (req, res) => {
+    Tema.find().then((temas) => {
+        res.render("formularioTema", { tema: temas })
+    }).catch((err) => {
+        console.log("Ocorreu um erro ao acessar os temas")
+    })
 
-router.get('/addtema', (req, res) => {
-    res.render("formularioTemasAdd")
 })
 
+//Chama tela de adicionar um novo tema 
+router.get('/addtema', (req, res) => {
+    res.render("formularioTemaAdd")
+})
+
+//Adiciona ao banco de dados um novo tema, caso correto
 router.post('/addtema', (req, res) => {
     const novoTema = {
         titulo: req.body.titulo,
@@ -102,12 +115,46 @@ router.post('/addtema', (req, res) => {
     }).catch((err) => {
         console.log("Houve um erro ao salvar o Tema: " + err)
     })
-
-    res.redirect("/admin")
+    res.redirect("/admin/tema")
 })
 
-router.get('/edittema', (req, res) => {
-    res.send("formularioTemasEdit")
+//Tela de edição de tema
+router.get('/edittema/:_id', (req, res) => {
+    Tema.find({ _id: req.params._id }).then((temas) => {
+        res.render("formularioTemaEdicao", { tema: temas })
+    }).catch((err) => {
+        console.log("Ocorreu um erro: " + err)
+    })
+})
+
+//Edita o tema no banco de dados
+router.post('/edittema', (req, res) => {
+    const temaModificado = {
+        _id: req.body.id,
+        titulo: req.body.titulo,
+        descricao: req.body.descricao,
+        imagem: {
+            path: "",//fs.readFileSync(req.body.img.userPhoto.path),
+            caption: ""//'image/png'
+        }
+    }
+    Tema.findOneAndUpdate({ _id: temaModificado._id }, temaModificado).then(() => {
+        console.log("Tema editado com sucesso")
+    }).catch((err) => {
+        console.log("Houve um erro ao editar o tema: " + err)
+    })
+    res.redirect("/admin/tema")
+})
+
+//Apagar temas pelo _id
+router.get('/deltema/:_id', (req, res) => {
+    Tema.findOneAndRemove({ _id: req.params._id }).then(() => {
+        console.log("Tema apagado com sucesso")
+    }).catch((err) => {
+        console.log("Houve um erro ao apagar o tema: " + err)
+    })
+
+    res.redirect("/admin/tema")
 })
 
 router.get('/promo', (req, res) => {
