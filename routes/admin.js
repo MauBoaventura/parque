@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     res.render("indexAdmin")
 })
 
-//Chama tela de adicionar um novo evento
+//Chama tela de adicionar um novo evento 
 router.get('/addevento', (req, res) => {
     res.render("formularioEventoAdd")
 })
@@ -28,7 +28,6 @@ router.post('/addevento', (req, res) => {
             caption: ""//'image/png'
         }
     }
-    console.log(req)
     new Evento(novoEvento).save().then(() => {
         console.log("Evento salvo com sucesso")
     }).catch((err) => {
@@ -38,9 +37,40 @@ router.post('/addevento', (req, res) => {
     res.redirect("/admin")
 })
 
+//Listar todos os eventos do banco de dados
 router.get('/editevento', (req, res) => {
-    res.render("formularioTemasEdit")
+    Evento.find().then((eventos) => {
+        res.render("formularioEventoEdit", { evento: eventos })
+    })
 })
+router.post('/editevento', (req, res) => {
+    const eventoModificado = {
+        _id: req.body.id,
+        titulo: req.body.titulo,
+        descricao: req.body.descricao,
+        imagem: {
+            path: "",//fs.readFileSync(req.body.img.userPhoto.path),
+            caption: ""//'image/png'
+        }
+    }
+    Evento.findOneAndUpdate({ _id: eventoModificado._id }, eventoModificado).then(() => {
+        console.log("Evento editado com sucesso")
+    }).catch((err) => {
+        console.log("Houve um erro ao editar o Evento: " + err)
+    })
+
+    res.redirect("/admin")
+
+})
+
+router.get('/editevento/:_id', (req, res) => {
+    Evento.find({ _id: req.params._id }).then((eventos) => {
+        res.render("formularioEventoEdicao", { evento: eventos })
+    }).catch((err) => {
+        console.log("Ocorreu um erro: " + err)
+    })
+})
+
 
 router.get('/addtema', (req, res) => {
     res.render("formularioTemasAdd")

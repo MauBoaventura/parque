@@ -1,0 +1,27 @@
+{{#each evento}}
+<div class="container mt-4">
+  <div align="center" class="form-group">
+    <h2>Inserir Evento</h2>
+  </div>
+  <form method="POST" action="/admin/editevento">
+    <input type="hidden" name="id" value="{{this._id}}">
+
+    <div class="form-group">
+      <label for="nome">Título: </label>
+      <input type="text" class="form-control" name="titulo" placeholder="Ex: Pinóquio " value="{{this.titulo}}">
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1">Descrição</label>
+      <textarea class="form-control" name="descricao" rows="3">{{this.descricao}}</textarea>
+    </div>
+    <div class=" form-group">
+      <label for="exampleFormControlFile1">Fotos</label>
+      <span>
+        <input id="input-2" name="img" type="file" class="form-control" multiple data-show-upload="true"
+          data-show-caption="true">
+      </span>
+    </div>
+    <button type="submit" class="btn btn-success">ADD</button>
+  </form>
+</div>
+{{/each}}
