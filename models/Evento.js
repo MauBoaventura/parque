@@ -12,8 +12,13 @@ const Evento = new Schema({
         required: true
     },
     imagem: {
-        path: { type: String },
-        caption: { type: String }
+        type: Array,
+        data: Buffer,
+        contentType: String,
+        default: {
+            data: "nada1",
+            contentType: "nada2"
+        }
     },
     data: {
         type: Date,

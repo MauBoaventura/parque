@@ -38,10 +38,14 @@ router.post('/addevento', (req, res) => {
         }
     }
     new Evento(novoEvento).save().then(() => {
-        console.log("Evento salvo com sucesso")
+        req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
+        req.flash("success_msg", "Evento salvo com sucesso")
     }).catch((err) => {
-        console.log("Houve um erro ao salvar o Evento: " + err)
+    //    console.log("Houve um erro ao salvar o Evento: " + err)
+      //  req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
+        //req.flash("error_msg", "Evento salvo com sucesso")
     })
+    //req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
     res.redirect("/admin/evento")
 })
 
