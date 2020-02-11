@@ -2,7 +2,7 @@
   <div align="center" class="form-group">
     <h2>Inserir Evento</h2>
   </div>
-  <form method="POST" action="/admin/addevento">
+  <form method="POST" action="/admin/addevento" enctype="multipart/form-data">
     <div class="form-group">
       <label for="nome">Título: </label>
       <input type="text" class="form-control" name="titulo" placeholder="Ex: Pinóquio">
@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
-        <input id="input-2" name="img" type="file" class="form-control" multiple data-show-upload="true"
+        <input name="eventoimg" type="file" class="form-control" multiple data-show-upload="true"
           data-show-caption="true">
       </span>
     </div>

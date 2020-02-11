@@ -1,14 +1,30 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
 
-var fs = require('fs');
+const moment = require('moment')
+
 var multer = require('multer');
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, moment(Date.now()).format("DD-MM-YYYY") + " " +
+            file.originalname)
+    }
+})
+
+const upload = multer({ storage: storage });
+
+
+const mongoose = require('mongoose');
 require("../models/Evento")
 const Evento = mongoose.model("Eventos")
 require("../models/Tema")
 const Tema = mongoose.model("Temas")
+
+
 
 router.get('/', (req, res) => {
     res.render("indexAdmin")
@@ -28,25 +44,29 @@ router.get('/addevento', (req, res) => {
 })
 
 //Adiciona ao banco de dados um novo evento, caso correto
-router.post('/addevento', (req, res) => {
+router.post('/addevento', upload.single('eventoimg'), (req, res, next) => {
     const novoEvento = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         imagem: {
-            path: "",//fs.readFileSync(req.body.img.userPhoto.path),
-            caption: ""//'image/png'
+            //path: fs.readFileSync(imgPath),
+            //caption: ""//'image/png'
         }
     }
+    //console.log("Um arquivo: " + req.file)
+
+    //console.log("Mais de um arquivo: " + req.files)
     new Evento(novoEvento).save().then(() => {
         req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
         req.flash("success_msg", "Evento salvo com sucesso")
     }).catch((err) => {
-    //    console.log("Houve um erro ao salvar o Evento: " + err)
-      //  req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
+        //    console.log("Houve um erro ao salvar o Evento: " + err)
+        //  req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
         //req.flash("error_msg", "Evento salvo com sucesso")
     })
     //req.flash("error_msg", { error_msg: "Evento salvo com sucesso" })
     res.redirect("/admin/evento")
+    next()
 })
 
 //Tela de edição do evento
@@ -163,6 +183,10 @@ router.get('/deltema/:_id', (req, res) => {
 
 router.get('/promo', (req, res) => {
     res.send("Editar promo")
+})
+
+router.get("/teste", upload.single('evento'), (req, res) => {
+    console.log(req.file)
 })
 
 module.exports = router;
