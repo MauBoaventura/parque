@@ -13,8 +13,8 @@ const Evento = new Schema({
     },
     imagem: {
         type: Array,
-        data: Buffer,
-        contentType: String,
+        path: String,
+        mimetype: String,
         default: {
             data: "nada1",
             contentType: "nada2"

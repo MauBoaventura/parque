@@ -2,6 +2,7 @@ const express = require("express");
 const handlebars = require("express-handlebars");
 const bodyParser = require("body-parser")
 
+const cookieParser = require('cookie-parser')
 const session = require("express-session")
 const flash = require("connect-flash")
 
@@ -19,19 +20,21 @@ const app = express();
 
 //Config
 //Sessao
-
 app.use(session({
     secret: "testequalquer",
     resave: true,
     saveUninitialized: true
 }))
 app.use(flash())
-//Middleware
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash("success_msg")
-    res.locals.error_msg = req.flash("error_msg")
-    next()
-})
+
+app.use(function (req, res, next) {
+    // if there's a flash message in the session request, make it available 
+    //in the response, then delete it
+    //res.locals.sucess_mgs = req.session.sucess_mgs;
+    //delete req.session.sucess_mgs;
+    next();
+});
+
 
 //Template engine
 app.engine('handlebars', handlebars({ defaulLayout: 'main' }))
@@ -49,7 +52,6 @@ mongoose.connect('mongodb://localhost/siteparque').then(() => {
     console.log("Erro ao se conectar ao banco de dados: " + erro)
 })
 //Mensagens Dinamicas
-
 
 
 //Rotas
