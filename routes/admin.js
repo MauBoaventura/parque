@@ -95,7 +95,7 @@ router.get('/editevento/:_id', async (req, res) => {
         })
         .then(async (eventos) => {
             // var a = await Evento.create(eventos)
-             console.log("\n\n"+eventos+"\n\n")
+            console.log("\n\n" + eventos + "\n\n")
             // console.log(typeof a);
             // var myobj = JSON.parse(a)
             // console.log("apos: " + typeof myobj);
@@ -110,15 +110,25 @@ router.get('/editevento/:_id', async (req, res) => {
 
 //Edita o evento no banco de dados
 router.post('/editevento', (req, res) => {
+    if (!req.files === undefined) {
+
+        let image = req.files.map(item => {
+            const {
+                mimetype,
+                path
+            } = item
+            return {
+                mimetype,
+                path
+            }
+        });
+    }
     const eventoModificado = {
         _id: req.body.id,
         titulo: req.body.titulo,
         descricao: req.body.descricao,
-        imagem: {
-            path: "", //fs.readFileSync(req.body.img.userPhoto.path),
-            caption: "" //'image/png'
-        }
     }
+
     Evento.findOneAndUpdate({
         _id: eventoModificado._id
     }, eventoModificado).then(() => {

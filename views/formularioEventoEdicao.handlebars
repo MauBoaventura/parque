@@ -21,7 +21,10 @@
           data-show-caption="true">
       </span>
     </div>
-    <img src="{{evento}}" class="rounded float-left" alt="...">
+    {{#each evento.imagem}}
+    Iterar a lista de imagens
+    {{/each}}
+    {{!-- <img src="{{evento}}" class="rounded float-left" alt="..."> --}}
     <button type="submit" class="btn btn-success">ADD</button>
   </form>
 </div>
