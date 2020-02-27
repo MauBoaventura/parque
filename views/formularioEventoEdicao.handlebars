@@ -22,7 +22,10 @@
       </span>
     </div>
     {{#each evento.imagem}}
-    Iterar a lista de imagens
+    <img src="{{this.path}}" class="img-fluid" alt="Imagem responsiva">
+    mimetype: {{this.mimetype}}
+    path:{{this.path}}
+    <br>
     {{/each}}
     {{!-- <img src="{{evento}}" class="rounded float-left" alt="..."> --}}
     <button type="submit" class="btn btn-success">ADD</button>
