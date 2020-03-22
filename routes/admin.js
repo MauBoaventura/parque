@@ -18,8 +18,8 @@ const upload = multer({
     storage: storage
 });
 
-const fs = require('fs');
-const path = require('path');
+//const fs = require('fs');
+//const path = require('path');
 
 const mongoose = require('mongoose');
 require("../models/Evento")
@@ -37,8 +37,15 @@ router.get('/', (req, res) => {
 //Lista todos os eventos do banco de dados
 router.get('/evento', (req, res) => {
     Evento.find().then((eventos) => {
+        let evento = eventos.map((dados) => {
+            return {
+                _id: dados._id,
+                titulo: dados.titulo,
+                descricao: dados.descricao
+            }
+        })
         res.render("formularioEvento", {
-            evento: eventos,
+            evento: evento,
             teste: true
         })
     })
@@ -55,10 +62,14 @@ router.get('/addevento', (req, res) => {
 router.post('/addevento', upload.array('eventoimg'), (req, res, next) => {
 
     let image = req.files.map(item => {
-        const {
+        let {
             mimetype,
             path
         } = item
+        path = path.replace("public\\", "").replace("\\","/")
+
+        console.log(path)
+
         return {
             mimetype,
             path
@@ -93,15 +104,20 @@ router.get('/editevento/:_id', async (req, res) => {
     await Evento.findById({
             _id: req.params._id
         })
-        .then(async (eventos) => {
-            // var a = await Evento.create(eventos)
-            console.log("\n\n" + eventos + "\n\n")
-            // console.log(typeof a);
-            // var myobj = JSON.parse(a)
-            // console.log("apos: " + typeof myobj);
+        .then((eventos) => {
+            let dado = {
+                _id: eventos._id,
+                titulo: eventos.titulo,
+                descricao: eventos.descricao,
+                data: eventos.data,
+                imagem: eventos.imagem,
+            }
+            let evento = [dado]
+
+            console.log(evento)
 
             res.render("formularioEventoEdicao", {
-                evento: eventos
+                evento: evento
             })
         }).catch((err) => {
             console.log("Ocorreu um erro: " + err)

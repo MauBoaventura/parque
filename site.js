@@ -37,14 +37,18 @@ app.use(function (req, res, next) {
 
 
 //Template engine
-app.engine('handlebars', handlebars({ defaulLayout: 'main' }))
+app.engine('handlebars', handlebars({
+    defaulLayout: 'main'
+}))
 app.set('view engine', 'handlebars')
 //Body-Parser
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 app.use(bodyParser.json())
 //public
-// app.use(express.static(path.join(__dirname, "public")))
-app.use(express.static('public'));
+ app.use(express.static(path.join(__dirname, "public")))
+//app.use(express.static('public'));
 //database
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/siteparque').then(() => {
