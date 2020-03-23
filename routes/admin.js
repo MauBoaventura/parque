@@ -46,7 +46,6 @@ router.get('/evento', (req, res) => {
         })
         res.render("formularioEvento", {
             evento: evento,
-            teste: true
         })
     })
 })
@@ -66,7 +65,7 @@ router.post('/addevento', upload.array('eventoimg'), (req, res, next) => {
             mimetype,
             path
         } = item
-        path = path.replace("public\\", "").replace("\\","/")
+        path = path.replace("public\\", "").replace("\\", "/")
 
         console.log(path)
 
@@ -105,6 +104,8 @@ router.get('/editevento/:_id', async (req, res) => {
             _id: req.params._id
         })
         .then((eventos) => {
+
+
             let dado = {
                 _id: eventos._id,
                 titulo: eventos.titulo,
@@ -125,24 +126,43 @@ router.get('/editevento/:_id', async (req, res) => {
 })
 
 //Edita o evento no banco de dados
-router.post('/editevento', (req, res) => {
-    if (!req.files === undefined) {
+router.post('/editevento', upload.array('eventoimg'), async (req, res) => {
+
+    let eventos = await Evento.findById({
+        _id: req.body.id
+    })
+    console.log(req.files)
+    if (req.files != undefined) {
 
         let image = req.files.map(item => {
-            const {
+            let {
                 mimetype,
                 path
             } = item
+            path = path.replace("public\\", "").replace("\\", "/")
+
+            console.log(path)
+
             return {
                 mimetype,
                 path
             }
         });
+
+        image.map(item => {
+            eventos.imagem.push(item)
+        })
+
+        console.log("IMAGE");
+        console.log(image);
     }
+    console.log(eventos.imagem);
+
     const eventoModificado = {
         _id: req.body.id,
         titulo: req.body.titulo,
         descricao: req.body.descricao,
+        imagem: eventos.imagem
     }
 
     Evento.findOneAndUpdate({

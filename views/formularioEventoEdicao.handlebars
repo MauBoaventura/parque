@@ -4,7 +4,7 @@
   <div align="center" class="form-group">
     <h2>Editar Evento</h2>
   </div>
-  <form method="POST" action="/admin/editevento">
+  <form method="POST" action="/admin/editevento" enctype="multipart/form-data">
     <input type="hidden" name="id" value="{{this._id}}">
 
     <div class="form-group">
@@ -18,16 +18,25 @@
     <div class=" form-group">
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
-        <input id="input-2" name="img" type="file" class="form-control" multiple data-show-upload="true"
+        <input id="input-2" name="eventoimg" type="file" class="form-control" multiple data-show-upload="true"
           data-show-caption="true">
       </span>
     </div>
-    {{#each this.imagem}}
-    <img src="/{{this.path}}" class="img-fluid" alt="Imagem responsiva">
-    mimetype: {{this.mimetype}}
-    path:{{this.path}}
     <br>
-    {{/each}}
+    <div class="container">
+      <div class="row row-cols-3">
+        {{#each this.imagem}}
+        <div class="col">
+
+          <img src="/{{this.path}}" class="img-fluid" alt="Imagem responsiva">
+          mimetype: {{this.mimetype}}
+          path:{{this.path}}
+
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-success">ADD</button>
   </form>
 </div>
