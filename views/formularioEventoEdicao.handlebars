@@ -1,5 +1,4 @@
 {{#each evento}}
-
 <div class="container mt-4">
   <div align="center" class="form-group">
     <h2>Editar Evento</h2>
@@ -19,25 +18,25 @@
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
         <input id="input-2" name="eventoimg" type="file" class="form-control" multiple data-show-upload="true"
-          data-show-caption="true">
+          data-show-caption="true" >
       </span>
     </div>
     <br>
     <div class="container">
-      <div class="row row-cols-3">
+      <div class="row row-cols-4">
         {{#each this.imagem}}
-        <div class="col">
+        <div class="col mt-2">
 
-          <img src="/{{this.path}}" class="img-fluid" alt="Imagem responsiva">
-          mimetype: {{this.mimetype}}
-          path:{{this.path}}
+          <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
 
         </div>
         {{/each}}
       </div>
+      <ul id="listImg"/>
+      </ul>
     </div>
 
-    <button type="submit" class="btn btn-success">ADD</button>
+    <button type="submit" class="btn btn-success mt-4">Editar</button>
   </form>
 </div>
 {{/each }}
