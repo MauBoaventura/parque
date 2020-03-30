@@ -1,16 +1,17 @@
 //Sempre que houver mudança no id: input-2
-  $("#input-2").change(function() {
+$("#input-2").change(function () {
     atualiza();
-  });
+});
 
 
 function atualiza() {
     var ul = document.getElementById("listImg");
+    var imagem = document.getElementById("imagem");
 
     //Limpa a lista
     var filhos = ul.childNodes;
     for (i = filhos.length - 1; i >= 0; i--) {
-        if (filhos[i].tagName == 'li') {
+        if (filhos[i].tagName == 'LI') {
             ul.removeChild(filhos[i]);
         }
     }
@@ -24,24 +25,19 @@ function atualiza() {
         li.innerHTML = imagens.files[index].name;
         ul.appendChild(li);
 
-    }
+        var div = document.createElement('div')
+        setAttributes(div, { 'class': 'col mt-2' })
+        div.innerHTML = "<button type=\"button\" class=\"close\" aria-label=\"Fechar\"> <span aria-hidden=\"true\">&times;</span></button>"
 
+        var img = document.createElement('img')
+        setAttributes(img, { 'class': 'rounded img-fluid', 'alt': "Imagem responsiva", 'src': window.URL.createObjectURL(imagens.files[index]) })
+        div.appendChild(img);
+
+        imagem.appendChild(div);
+    }
 }
-
-function readURL(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      
-      reader.onload = function(e) {
-        $('#blah').attr('src', e.target.result);
-      }
-      
-      reader.readAsDataURL(input.files[0]); // convert to base64 string
+function setAttributes(el, attrs) {
+    for (var key in attrs) {
+        el.setAttribute(key, attrs[key]);
     }
-  }
-  
-//   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-//   <form runat="server">
-//     <input type='file' id="imgInp" />
-//     <img id="blah" src="#" alt="your image" />
-//   </form>
+}

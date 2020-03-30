@@ -18,21 +18,23 @@
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
         <input id="input-2" name="eventoimg" type="file" class="form-control" multiple data-show-upload="true"
-          data-show-caption="true" >
+          data-show-caption="true">
       </span>
     </div>
     <br>
     <div class="container">
-      <div class="row row-cols-4">
+      <div class="row row-cols-4" id="imagem">
         {{#each this.imagem}}
         <div class="col mt-2">
-
+          <button type="button" class="close" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+          </button>
           <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
 
         </div>
         {{/each}}
       </div>
-      <ul id="listImg"/>
+      <ul id="listImg" />
       </ul>
     </div>
 
