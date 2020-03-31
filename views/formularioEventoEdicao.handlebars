@@ -3,7 +3,7 @@
   <div align="center" class="form-group">
     <h2>Editar Evento</h2>
   </div>
-  <form method="POST" action="/admin/editevento" enctype="multipart/form-data">
+  <form method="POST" action="/admin/editevento" enctype="multipart/form-data" id="formularioEvento">
     <input type="hidden" name="id" value="{{this._id}}">
 
     <div class="form-group">
@@ -27,9 +27,9 @@
         {{#each this.imagem}}
         <div class="col mt-2">
           <button type="button" class="close" aria-label="Fechar">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
-          <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
+            <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
 
         </div>
         {{/each}}
