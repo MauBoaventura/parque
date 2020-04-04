@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const crypto = require('crypto')
 const moment = require('moment')
+const formidable = require('formidable')
 
 var multer = require('multer');
 const storage = multer.diskStorage({
@@ -68,8 +70,10 @@ router.post('/addevento', upload.array('eventoimg'), (req, res, next) => {
         path = path.replace("public\\", "").replace("\\", "/")
 
         console.log(path)
+        let id = crypto.randomBytes(4).toString('HEX')
 
         return {
+            id,
             mimetype,
             path
         }
@@ -101,8 +105,8 @@ router.post('/addevento', upload.array('eventoimg'), (req, res, next) => {
 //Tela de edição do evento
 router.get('/editevento/:_id', async (req, res) => {
     await Evento.findById({
-            _id: req.params._id
-        })
+        _id: req.params._id
+    })
         .then((eventos) => {
 
 
@@ -126,8 +130,10 @@ router.get('/editevento/:_id', async (req, res) => {
 })
 
 //Edita o evento no banco de dados
-router.post('/editevento', upload.array('eventoimg'), async (req, res) => {
-
+router.post('/editevento',upload.array('eventoimg') ,async (req, res) => {
+    console.log("\n\nCorpo")
+    console.log(req.body)
+    console.log("\nResto " + req.body.id)
     let eventos = await Evento.findById({
         _id: req.body.id
     })
@@ -142,8 +148,10 @@ router.post('/editevento', upload.array('eventoimg'), async (req, res) => {
             path = path.replace("public\\", "").replace("\\", "/")
 
             console.log(path)
+            let id = crypto.randomBytes(4).toString('HEX')
 
             return {
+                id,
                 mimetype,
                 path
             }
@@ -278,5 +286,21 @@ router.get('/promo', (req, res) => {
 router.get("/teste", upload.single('evento'), (req, res) => {
     console.log(req.file)
 })
+
+router.post('/api/upload', (req, res, next) => {
+    const form = formidable({ multiples: true });
+    console.log("AAAA")
+    form.parse(req, (err, fields, files) => {
+        console.log("AAAA")
+        if (err) {
+            console.log("AAAA")
+            next(err);
+            return;
+        }
+        console.log({ fields, files })
+        res.json({ fields, files });
+    });
+});
+
 
 module.exports = router;

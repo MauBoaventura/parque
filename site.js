@@ -47,11 +47,14 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json())
 //public
- app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "public")))
 //app.use(express.static('public'));
 //database
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/siteparque').then(() => {
+mongoose.connect('mongodb://localhost/siteparque', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
     console.log("Conectado ao banco de dados: siteparque com sucesso")
 }).catch((erro) => {
     console.log("Erro ao se conectar ao banco de dados: " + erro)

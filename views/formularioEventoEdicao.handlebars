@@ -3,7 +3,8 @@
   <div align="center" class="form-group">
     <h2>Editar Evento</h2>
   </div>
-  <form method="POST" action="/admin/editevento" enctype="multipart/form-data" id="formularioEvento">
+  <form method="POST" action="/admin/editevento" enctype="multipart/form-data" id="formularioEvento"
+    name="formularioEvento">
     <input type="hidden" name="id" value="{{this._id}}">
 
     <div class="form-group">
@@ -25,11 +26,11 @@
     <div class="container">
       <div class="row row-cols-4" id="imagem">
         {{#each this.imagem}}
-        <div class="col mt-2">
+        <div class="col mt-2" id="{{this.id}}">
           <button type="button" class="close" aria-label="Fechar">
             <span aria-hidden="true">&times;</span>
           </button>
-            <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
+          <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
 
         </div>
         {{/each}}
@@ -42,3 +43,10 @@
   </form>
 </div>
 {{/each }}
+{{!-- 
+<input type="file" id="filesInput" multiple>
+<button id="deleteFiles">delete file</button>
+ --}}
+ <div></div>
+{{!-- upload.array('eventoimg'), --}}
+{{!-- enctype="multipart/form-data" --}}
