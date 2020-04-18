@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const fs = require('fs')
 const crypto = require('crypto')
 const moment = require('moment')
 const formidable = require('formidable')
@@ -119,7 +120,7 @@ router.get('/editevento/:_id', async (req, res) => {
             }
             let evento = [dado]
 
-            console.log(evento)
+            // console.log(evento)
 
             res.render("formularioEventoEdicao", {
                 evento: evento
@@ -130,14 +131,12 @@ router.get('/editevento/:_id', async (req, res) => {
 })
 
 //Edita o evento no banco de dados
-router.post('/editevento',upload.array('eventoimg') ,async (req, res) => {
-    console.log("\n\nCorpo")
-    console.log(req.body)
-    console.log("\nResto " + req.body.id)
+router.post('/editevento', async (req, res) => {
+    // console.log("\nResto " + req.body.id)
     let eventos = await Evento.findById({
         _id: req.body.id
     })
-    console.log(req.files)
+    // console.log(req.files)
     if (req.files != undefined) {
 
         let image = req.files.map(item => {
@@ -283,15 +282,10 @@ router.get('/promo', (req, res) => {
     res.send("Editar promo")
 })
 
-router.get("/teste", upload.single('evento'), (req, res) => {
-    console.log(req.file)
-})
-
 router.post('/api/upload', (req, res, next) => {
     const form = formidable({ multiples: true });
-    console.log("AAAA")
+    // console.log(req)
     form.parse(req, (err, fields, files) => {
-        console.log("AAAA")
         if (err) {
             console.log("AAAA")
             next(err);
@@ -302,5 +296,95 @@ router.post('/api/upload', (req, res, next) => {
     });
 });
 
+router.post('/deleteimg/:id', async (req, res) => {
+    let { id } = req.params
+    console.log(id)
+    let evento = await Evento.findOne().where({ 'imagem.id': id })
 
+    if (evento == '' || evento == null) {
+        console.log("Arquivo não encontrado")
+        res.json('Fail')
+    } else {
+        //Encontra e remove o elemento do array da imagem
+        var index = evento.imagem.indexOf(evento.imagem.find(element => element.id == id))
+        let caminho = 'public/' + evento.imagem[index].path
+        try {
+            fs.unlinkSync(caminho
+            //     , (err) => {
+            //     if (err) throw err;
+            //     console.log(caminho + ' was deleted');
+            // }
+            );
+        } catch (error) {
+            console.log("ENTROU NO ERRROOOO")
+            res.json('ERROR param')
+        }
+        if (index > -1) {
+            evento.imagem.splice(index, 1);
+        }
+        console.log("EVENTO a ser salvo: ")
+        console.log(evento)
+
+        //Atualiza o Banco de dados
+        Evento.findOneAndUpdate(
+            { 'imagem.id': id }
+            , evento).then(() => {
+                console.log("Evento editado com sucesso")
+            }).catch((err) => {
+                console.log("Houve um erro ao editar o Evento: " + err)
+            })
+
+        res.json('Success')
+    }
+
+})
+
+router.post('/insertimg', upload.array('imagem'), async (req, res) => {
+    console.log("O arquvo inserido foi: ");
+    console.log(req.files)
+    console.log("Copro")
+    console.log(req.body.id)
+
+    let eventos = await Evento.findById({
+        _id: req.body.id
+    })
+    if (req.files != undefined) {
+
+        console.log('itens')
+        var image = req.files.map(item => {
+            console.log(item)
+            let {
+                mimetype,
+                path
+            } = item
+            path = path.replace("public\\", "").replace("\\", "/")
+
+            // console.log(path)
+            let id = crypto.randomBytes(4).toString('HEX')
+
+            return {
+                id,
+                mimetype,
+                path
+            }
+        });
+
+        image.map(item => {
+            eventos.imagem.push(item)
+        })
+    }
+    console.log(eventos)
+
+    Evento.findOneAndUpdate({
+        _id: req.body.id
+    }, eventos).then(() => {
+        console.log("Imagem inserida com sucesso")
+        res.send(eventos.imagem[eventos.imagem.length - 1].id)
+
+    }).catch((err) => {
+        console.log("Houve um erro ao editar o Evento: " + err)
+        res.send("fail")
+    })
+
+})
 module.exports = router;

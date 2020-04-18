@@ -2,36 +2,51 @@
 var fechar = document.querySelectorAll('.close');
 
 $("#input-2").change(function () {
-    atualiza();
     if (document.getElementById('input-2').files.length == 0) {
-        removeTudo()
+        // removeTudo()
+    } else {
+        atualiza();
+        // atualizaClose()                                                             .
     }
-    atualizaClose()
 
 });
 
-let ids = 1
-function atualiza() {
-    // var ul = document.getElementById("listImg");
+async function atualiza() {
+    const ids = new Array();
+
     var imagem = document.getElementById("imagem");
 
     removeTudo()
     var imagens = document.getElementById('input-2')
 
-    // console.log(imagens.files.length)
+    //Insere a imagem e pega o ID
+    for (let index = 0; index < imagens.files.length; index++) {
+        var formData = new FormData();
+        const file = imagens.files[index]
+        formData.append("imagem", file);
+        formData.append("id", document.getElementsByName('id')[0].value);
+        var algo = await axios.post('/admin/insertimg', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        ids.push(algo.data)
+    }
+
 
     for (let index = 0; index < imagens.files.length; index++) {
         var div = document.createElement('div')
-        setAttributes(div, { 'class': 'col mt-2', 'id': ids })
+        setAttributes(div, { 'class': 'col mt-2', 'id': ids[index] })
         div.innerHTML = "<button type=\"button\" class=\"close\" aria-label=\"Fechar\"> <span aria-hidden=\"true\">&times;</span></button>"
 
         var img = document.createElement('img')
         setAttributes(img, { 'class': 'rounded img-fluid', 'alt': "Imagem responsiva", 'src': window.URL.createObjectURL(imagens.files[index]) })
         div.appendChild(img);
 
-        ids++;
         imagem.appendChild(div);
     }
+
+    atualizaClose()
 }
 
 //Coloca todos os atributos no Element
@@ -51,23 +66,28 @@ function removeTudo() {
     }
 }
 
+function addClose(item) {
+    console.log(item.parentElement.getAttribute('id'))
+    axios.post('/admin/deleteimg/' + item.parentElement.getAttribute('id'))
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+
+    item.parentElement.remove()
+    // atualizaClose()
+}
+// var iterado = ''
+// var closeItem = () => addClose(iterado)
+
 
 function atualizaClose() {
     fechar = document.querySelectorAll('.close');
     fechar.forEach(function (item) {
-        item.addEventListener('click', () => {
-            if (item.parentElement.getAttribute('id') < 100) {
-                var files = document.getElementById('input-2')
-
-            }
-            item.parentElement.remove()
-            atualizaClose()
-        });
-
+        // iterado = item
+        // item.removeEventListener('click', closeItem, false);
+        item.addEventListener('click', () => addClose(item));
     });
 
 }
-
 atualizaClose()
 
 $('#formularioEvento').submit((evt) => {
@@ -76,55 +96,6 @@ $('#formularioEvento').submit((evt) => {
             item.parentElement.getAttribute('id')
         )
     })
-    // var oData = new FormData($('#formularioEvento'));
-    // oData.append("CustomField", "This is some extra data");
-
-    // var oReq = new XMLHttpRequest();
-    // oReq.open("POST", "/admin/editevento", true);
-    
-    // oReq.send(oData)
-
 
     // evt.preventDefault();
 })
-
-// var form = document.forms.namedItem("formularioEvento");
-// form.addEventListener('submit', function (ev) {
-
-    // var oOutput = document.querySelector("div"),
-    //     oData = new FormData(form);
-
-    // oData.append("CustomField", "This is some extra data");
-
-    // var imagens = []
-    // // var aFileParts = ['<a id="a"><b id="b">hey!</b></a>'];
-    // for (let index = 0; index < document.getElementById('input-2').files.length; index++) {
-    //     const element = document.getElementById('input-2').files[index];
-    //     imagens.push(element)
-    //     console.log("\n\n" + element)
-    // }
-
-    // // var oMyBlob = oBuilder.getBlob('text/xml'); // o blob
-
-    // var oMyBlob = new Blob(imagens, { type: "image/png" }); // o blob
-    // console.log(oMyBlob)
-    // oMyBlob.arrayBuffe
-    // if (oMyBlob.size > 0)
-    //     oData.append("eventoimg", oMyBlob);
-    // oData.append("eventoimg", document.getElementById('input-2'));
-
-    // var oReq = new XMLHttpRequest();
-    // oReq.open("POST", "/admin/editevento", true);
-    // oReq.onload = function (oEvent) {
-    //     if (oReq.status == 200) {
-    //         oOutput.innerHTML = "Uploaded!";
-    //     } else {
-    //         oOutput.innerHTML = "Error " + oReq.status + " occurred when trying to upload your file.<br \/>";
-    //     }
-    // };
-
-    // oReq.send(oData);
-//     ev.preventDefault();
-//     console.log("AAAAAAAAAAAAAAAAAAAAA")
-//     console.log(oData)
-// }, false);

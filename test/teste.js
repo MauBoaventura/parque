@@ -1,63 +1,34 @@
-var express = require('express');
-var fs = require('fs');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var imgPath = 'C:\\Users\\maurc\\Pictures\\Screenshots\\Captura de Tela (1).png';
+'use strict';
 
-mongoose.connect('mongodb://localhost/siteparque').then(() => {
-    console.log("Conectado ao banco de dados: siteparque com sucesso")
-}).catch((erro) => {
-    console.log("Erro ao se conectar ao banco de dados: " + erro)
-})
+const express = require('express');
+const formidable = require('formidable');
 
-var schema = new Schema({
-    img: { data: Buffer, contentType: String }
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send(`
+    <h2>With <code>"express"</code> npm package</h2>
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>File: <input type="file" name="someExpressFiles" /></div>
+      <input type="submit" value="Upload" />
+    </form>
+  `);
 });
 
-var A = mongoose.model('A', schema);
+app.post('/api/upload', (req, res, next) => {
+    console.log(req)
+  const form = formidable({ multiples: true });
 
-mongoose.connection.on('open', function () {
-    console.error('mongo is open');
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+});
 
-    A.remove(function (err) {
-        if (err) throw err;
-
-        console.error('removed old docs');
-
-        // store an img in binary in mongo
-        var a = new A;
-        a.img.data = fs.readFileSync(imgPath);
-        a.img.contentType = 'image/png';
-        a.save(function (err, a) {
-            if (err) throw err;
-
-            console.error('saved img to mongo');
-
-            // start a demo server
-            var server = express();
-            server.get('/', function (req, res, next) {
-                A.findById(a, function (err, doc) {
-                    if (err) return next(err);
-                    res.contentType(doc.img.contentType);
-                    res.send(doc.img.data);
-                });
-            });
-
-            server.on('close', function () {
-                console.error('dropping db');
-                mongoose.connection.db.dropDatabase(function () {
-                    console.error('closing db connection');
-                    mongoose.connection.close();
-                });
-            });
- 
-            server.listen(3333, function (err) {
-            });
-
-            process.on('SIGINT', function () {
-                server.close();
-            });
-        });
-    });
-
+app.listen(3000, () => {
+  console.log('Server listening on http://localhost:3000 ...');
 });

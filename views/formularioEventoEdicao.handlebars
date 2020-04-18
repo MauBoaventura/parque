@@ -3,8 +3,7 @@
   <div align="center" class="form-group">
     <h2>Editar Evento</h2>
   </div>
-  <form method="POST" action="/admin/editevento" enctype="multipart/form-data" id="formularioEvento"
-    name="formularioEvento">
+  <form method="POST" action="/admin/editevento" id="formularioEvento" name="formularioEvento">
     <input type="hidden" name="id" value="{{this._id}}">
 
     <div class="form-group">
@@ -18,8 +17,7 @@
     <div class=" form-group">
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
-        <input id="input-2" name="eventoimg" type="file" class="form-control" multiple data-show-upload="true"
-          data-show-caption="true">
+        <input id="input-2" data-show-caption="true" type="file" class="form-control" multiple data-show-upload="true">
       </span>
     </div>
     <br>
@@ -47,6 +45,8 @@
 <input type="file" id="filesInput" multiple>
 <button id="deleteFiles">delete file</button>
  --}}
- <div></div>
+<div></div>
 {{!-- upload.array('eventoimg'), --}}
 {{!-- enctype="multipart/form-data" --}}
+{{!-- name="eventoimg" --}}
+{{!-- method="POST" action="/admin/editevento" --}}
