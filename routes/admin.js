@@ -186,8 +186,23 @@ router.post('/editevento', async (req, res) => {
 router.get('/delevento/:_id', (req, res) => {
     Evento.findOneAndRemove({
         _id: req.params._id
-    }).then(() => {
-        console.log("Evento apagado com sucesso")
+    }).then((evento) => {
+        //Lista de ids a serem apagados
+        let ids = evento.imagem.map((item) => {
+            return item.id
+        })
+
+        //Apagando todas imagens pelo ids
+        for (let i = 0; i < ids.length; i++) {
+            var index = evento.imagem.indexOf(evento.imagem.find(element => element.id == ids[i]))
+            let caminho = 'public/' + evento.imagem[index].path
+            try {
+                fs.unlinkSync(caminho);
+            } catch (error) {
+                console.log("ENTROU NO ERRROOOO")
+            }
+        }
+        console.log("Evento apagado com sucesso" + ids)
     }).catch((err) => {
         console.log("Houve um erro ao apagar o Evento: " + err)
     })
@@ -309,12 +324,7 @@ router.post('/deleteimg/:id', async (req, res) => {
         var index = evento.imagem.indexOf(evento.imagem.find(element => element.id == id))
         let caminho = 'public/' + evento.imagem[index].path
         try {
-            fs.unlinkSync(caminho
-            //     , (err) => {
-            //     if (err) throw err;
-            //     console.log(caminho + ' was deleted');
-            // }
-            );
+            fs.unlinkSync(caminho);
         } catch (error) {
             console.log("ENTROU NO ERRROOOO")
             res.json('ERROR param')
