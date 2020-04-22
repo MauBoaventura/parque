@@ -214,12 +214,20 @@ router.get('/delevento/:_id', (req, res) => {
 //Lista todos os temas do banco de dados
 router.get('/tema', (req, res) => {
     Tema.find().then((temas) => {
+        let tema = temas.map((dados) => {
+            return {
+                _id: dados._id,
+                titulo: dados.titulo,
+                descricao: dados.descricao
+            }
+        })
         res.render("formularioTema", {
-            tema: temas
+            tema: tema
         })
     }).catch((err) => {
         console.log("Ocorreu um erro ao acessar os temas")
     })
+
 
 })
 
@@ -229,14 +237,29 @@ router.get('/addtema', (req, res) => {
 })
 
 //Adiciona ao banco de dados um novo tema, caso correto
-router.post('/addtema', (req, res) => {
+router.post('/addtema', upload.array('temaimg'), (req, res) => {
+    let image = req.files.map(item => {
+        let {
+            mimetype,
+            path
+        } = item
+        path = path.replace("public\\", "").replace("\\", "/")
+
+        console.log(path)
+        let id = crypto.randomBytes(4).toString('HEX')
+
+        return {
+            id,
+            mimetype,
+            path
+        }
+    });
+    
     const novoTema = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
-        imagem: {
-            //path: fs.readFileSync(req.body.img.userPhoto.path),
-            //caption: 'image/png'
-        }
+        imagem: image
+
     }
     new Tema(novoTema).save().then(() => {
         console.log("Tema salva com sucesso")
@@ -244,6 +267,7 @@ router.post('/addtema', (req, res) => {
         console.log("Houve um erro ao salvar o Tema: " + err)
     })
     res.redirect("/admin/tema")
+
 })
 
 //Tela de edição de tema
