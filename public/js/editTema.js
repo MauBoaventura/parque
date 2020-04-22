@@ -1,7 +1,7 @@
 //Sempre que houver mudança no id: input-2
 var fechar = document.querySelectorAll('.close');
 
-$("#input-2").change(function () {
+$("#input-tema").change(function () {
     if (document.getElementById('input-2').files.length == 0) {
         // removeTudo()
     } else {
@@ -25,7 +25,7 @@ async function atualiza() {
         const file = imagens.files[index]
         formData.append("imagem", file);
         formData.append("id", document.getElementsByName('id')[0].value);
-        var algo = await axios.post('/admin/insertimgevento', formData, {
+        var algo = await axios.post('/admin/insertimgtema', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -75,8 +75,6 @@ function addClose(item) {
     item.parentElement.remove()
     // atualizaClose()
 }
-// var iterado = ''
-// var closeItem = () => addClose(iterado)
 
 
 function atualizaClose() {

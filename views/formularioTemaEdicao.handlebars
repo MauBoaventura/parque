@@ -1,9 +1,10 @@
+{{tema.imagem}}
 {{#each tema}}
 <div class="container mt-4">
   <div align="center" class="form-group">
-    <h2>Inserir tema</h2>
+    <h2>Editar Tema</h2>
   </div>
-  <form method="POST" action="/admin/edittema">
+  <form method="POST" action="/admin/edittema" id="formularioTema" name="formularioTema">
     <input type="hidden" name="id" value="{{this._id}}">
 
     <div class="form-group">
@@ -17,11 +18,24 @@
     <div class=" form-group">
       <label for="exampleFormControlFile1">Fotos</label>
       <span>
-        <input id="input-2" name="img" type="file" class="form-control" multiple data-show-upload="true"
-          data-show-caption="true">
+        <input id="input-tema" data-show-caption="true" type="file" class="form-control" multiple data-show-upload="true">
       </span>
     </div>
-    <button type="submit" class="btn btn-success">ADD</button>
+    <br>
+    <div class="container">
+      <div class="row row-cols-4" id="imagem">
+        {{#each this.imagem}}
+        <div class="col mt-2" id="{{this.id}}">
+          <button type="button" class="close" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <img src="/{{this.path}}" class="rounded img-fluid" alt="Imagem responsiva">
+
+        </div>
+        {{/each}}
+    </div>
+
+    <button type="submit" class="btn btn-success mt-4">Editar</button>
   </form>
 </div>
-{{/each}}
+{{/each }}

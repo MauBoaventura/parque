@@ -254,15 +254,17 @@ router.post('/addtema', upload.array('temaimg'), (req, res) => {
             path
         }
     });
+
     
     const novoTema = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         imagem: image
-
     }
-    new Tema(novoTema).save().then(() => {
-        console.log("Tema salva com sucesso")
+    console.log(novoTema)
+
+    new Tema(novoTema).save().then((tema) => {
+        console.log("Tema salvo com sucesso" + tema)
     }).catch((err) => {
         console.log("Houve um erro ao salvar o Tema: " + err)
     })
@@ -271,16 +273,25 @@ router.post('/addtema', upload.array('temaimg'), (req, res) => {
 })
 
 //Tela de edição de tema
-router.get('/edittema/:_id', (req, res) => {
-    Tema.find({
+router.get('/edittema/:_id', async (req, res) => {
+    await Tema.findById({
         _id: req.params._id
     }).then((temas) => {
+        let dado = {
+            _id: temas._id,
+            titulo: temas.titulo,
+            descricao: temas.descricao,
+            data: temas.data,
+            imagem: temas.imagem,
+        }
+        let tema = [dado]
         res.render("formularioTemaEdicao", {
-            tema: temas
+            tema: tema
         })
     }).catch((err) => {
         console.log("Ocorreu um erro: " + err)
     })
+
 })
 
 //Edita o tema no banco de dados
@@ -373,7 +384,7 @@ router.post('/deleteimg/:id', async (req, res) => {
 
 })
 
-router.post('/insertimg', upload.array('imagem'), async (req, res) => {
+router.post('/insertimgevento', upload.array('imagem'), async (req, res) => {
     console.log("O arquvo inserido foi: ");
     console.log(req.files)
     console.log("Copro")
@@ -414,6 +425,55 @@ router.post('/insertimg', upload.array('imagem'), async (req, res) => {
     }, eventos).then(() => {
         console.log("Imagem inserida com sucesso")
         res.send(eventos.imagem[eventos.imagem.length - 1].id)
+
+    }).catch((err) => {
+        console.log("Houve um erro ao editar o Evento: " + err)
+        res.send("fail")
+    })
+
+})
+
+router.post('/insertimgtema', upload.array('imagem'), async (req, res) => {
+    console.log("O arquvo inserido foi: ");
+    console.log(req.files)
+    console.log("Copro")
+    console.log(req.body.id)
+
+    let temas = await Tema.findById({
+        _id: req.body.id
+    })
+    if (req.files != undefined) {
+
+        console.log('itens')
+        var image = req.files.map(item => {
+            console.log(item)
+            let {
+                mimetype,
+                path
+            } = item
+            path = path.replace("public\\", "").replace("\\", "/")
+
+            // console.log(path)
+            let id = crypto.randomBytes(4).toString('HEX')
+
+            return {
+                id,
+                mimetype,
+                path
+            }
+        });
+
+        image.map(item => {
+            temas.imagem.push(item)
+        })
+    }
+    console.log(temas)
+
+    Tema.findOneAndUpdate({
+        _id: req.body.id
+    }, temas).then(() => {
+        console.log("Imagem inserida com sucesso")
+        res.send(temas.imagem[temas.imagem.length - 1].id)
 
     }).catch((err) => {
         console.log("Houve um erro ao editar o Evento: " + err)
