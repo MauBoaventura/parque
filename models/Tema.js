@@ -12,8 +12,9 @@ const Tema = new Schema({
         required: true
     },
     imagem: {
-        path: { type: String },
-        caption: { type: String }
+        type: Array,
+        path: String,
+        mimetype: String,
     },
     data: {
         type: Date,

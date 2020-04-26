@@ -109,8 +109,6 @@ router.get('/editevento/:_id', async (req, res) => {
         _id: req.params._id
     })
         .then((eventos) => {
-
-
             let dado = {
                 _id: eventos._id,
                 titulo: eventos.titulo,
@@ -119,8 +117,7 @@ router.get('/editevento/:_id', async (req, res) => {
                 imagem: eventos.imagem,
             }
             let evento = [dado]
-
-            // console.log(evento)
+            console.log(evento)
 
             res.render("formularioEventoEdicao", {
                 evento: evento
@@ -255,7 +252,7 @@ router.post('/addtema', upload.array('temaimg'), (req, res) => {
         }
     });
 
-    
+
     const novoTema = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
@@ -285,6 +282,7 @@ router.get('/edittema/:_id', async (req, res) => {
             imagem: temas.imagem,
         }
         let tema = [dado]
+        console.log(tema)
         res.render("formularioTemaEdicao", {
             tema: tema
         })

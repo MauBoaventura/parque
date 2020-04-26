@@ -16,10 +16,6 @@ const Evento = new Schema({
         type: Array,
         path: String,
         mimetype: String,
-        default: {
-            data: "nada1",
-            contentType: "nada2"
-        }
     },
     data: {
         type: Date,
