@@ -5,13 +5,13 @@ $("#input-2").change(function () {
     if (document.getElementById('input-2').files.length == 0) {
         // removeTudo()
     } else {
-        atualiza();
+        atualizaEvento();
         // atualizaClose()                                                             .
     }
 
 });
 
-async function atualiza() {
+async function atualizaEvento() {
     const ids = new Array();
 
     var imagem = document.getElementById("imagem");

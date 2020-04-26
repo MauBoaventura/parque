@@ -5,13 +5,13 @@ $("#input-tema").change(function () {
     if (document.getElementById('input-tema').files.length == 0) {
         // removeTudo()
     } else {
-        atualiza();
+        atualizaTema();
         // atualizaClose()                                                             .
     }
 
 });
 
-async function atualiza() {
+async function atualizaTema() {
     const ids = new Array();
 
     var imagem = document.getElementById("imagem");

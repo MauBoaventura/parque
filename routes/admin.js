@@ -280,7 +280,6 @@ router.get('/edittema/:_id', async (req, res) => {
             imagem: temas.imagem,
         }
         let tema = [dado]
-        console.log(tema)
         res.render("formularioTemaEdicao", {
             tema: tema
         })
@@ -292,7 +291,7 @@ router.get('/edittema/:_id', async (req, res) => {
 
 //Edita o tema no banco de dados
 router.post('/edittema', async (req, res) => {
-
+    console.log("EDDDIT TEMA")
     let tema = await Tema.findById({
         _id: req.body.id
     })
@@ -319,7 +318,6 @@ router.post('/edittema', async (req, res) => {
             tema.imagem.push(item)
         })
     }
-    console.log(tema.imagem);
 
     const temaModificado = {
         _id: req.body.id,
@@ -327,9 +325,10 @@ router.post('/edittema', async (req, res) => {
         descricao: req.body.descricao,
         imagem: tema.imagem
     }
+    console.log(temaModificado);
 
-    Evento.findOneAndUpdate({
-        _id: temaModificado._id
+    Tema.findOneAndUpdate({
+        _id: req.body.id
     }, temaModificado).then(() => {
         console.log("Tema editado com sucesso")
     }).catch((err) => {
@@ -357,20 +356,6 @@ router.get('/promo', (req, res) => {
     res.send("Editar promo")
 })
 
-router.post('/api/upload', (req, res, next) => {
-    const form = formidable({ multiples: true });
-    // console.log(req)
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            console.log("AAAA")
-            next(err);
-            return;
-        }
-        console.log({ fields, files })
-        res.json({ fields, files });
-    });
-});
-
 router.post('/deleteimg/:id', async (req, res) => {
     let { id } = req.params
     console.log(id)
@@ -382,7 +367,7 @@ router.post('/deleteimg/:id', async (req, res) => {
 
         if (tema == '' || tema == null) {
             console.log("Arquivo não encontrado")
-            res.json('Fail')
+            return res.json('Fail')
         } else {
             //Encontra e remove o elemento do array da imagem
             var index = tema.imagem.indexOf(tema.imagem.find(element => element.id == id))
@@ -391,7 +376,7 @@ router.post('/deleteimg/:id', async (req, res) => {
                 fs.unlinkSync(caminho);
             } catch (error) {
                 console.log("ENTROU NO ERRROOOO")
-                res.json('ERROR param')
+                return res.json('ERROR param')
             }
             if (index > -1) {
                 tema.imagem.splice(index, 1);
@@ -434,8 +419,8 @@ router.post('/deleteimg/:id', async (req, res) => {
                 console.log("Houve um erro ao editar o Evento: " + err)
             })
 
-        res.json('Success')
     }
+    res.json('Success').status(200)
 
 })
 
@@ -536,4 +521,5 @@ router.post('/insertimgtema', upload.array('imagem'), async (req, res) => {
     })
 
 })
+
 module.exports = router;
