@@ -1,8 +1,8 @@
-//Sempre que houver mudança no id: input-2
+//Sempre que houver mudança no id: input-tema
 var fechar = document.querySelectorAll('.close');
 
 $("#input-tema").change(function () {
-    if (document.getElementById('input-2').files.length == 0) {
+    if (document.getElementById('input-tema').files.length == 0) {
         // removeTudo()
     } else {
         atualiza();
@@ -17,7 +17,7 @@ async function atualiza() {
     var imagem = document.getElementById("imagem");
 
     removeTudo()
-    var imagens = document.getElementById('input-2')
+    var imagens = document.getElementById('input-tema')
 
     //Insere a imagem e pega o ID
     for (let index = 0; index < imagens.files.length; index++) {
@@ -86,7 +86,6 @@ function atualizaClose() {
     });
 
 }
-atualizaClose()
 
 $('#formularioEvento').submit((evt) => {
     fechar.forEach(function (item) {

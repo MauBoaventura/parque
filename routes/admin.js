@@ -129,11 +129,9 @@ router.get('/editevento/:_id', async (req, res) => {
 
 //Edita o evento no banco de dados
 router.post('/editevento', async (req, res) => {
-    // console.log("\nResto " + req.body.id)
     let eventos = await Evento.findById({
         _id: req.body.id
     })
-    // console.log(req.files)
     if (req.files != undefined) {
 
         let image = req.files.map(item => {
@@ -293,24 +291,53 @@ router.get('/edittema/:_id', async (req, res) => {
 })
 
 //Edita o tema no banco de dados
-router.post('/edittema', (req, res) => {
+router.post('/edittema', async (req, res) => {
+
+    let tema = await Tema.findById({
+        _id: req.body.id
+    })
+    if (req.files != undefined) {
+
+        let image = req.files.map(item => {
+            let {
+                mimetype,
+                path
+            } = item
+            path = path.replace("public\\", "").replace("\\", "/")
+
+            console.log(path)
+            let id = crypto.randomBytes(4).toString('HEX')
+
+            return {
+                id,
+                mimetype,
+                path
+            }
+        });
+
+        image.map(item => {
+            tema.imagem.push(item)
+        })
+    }
+    console.log(tema.imagem);
+
     const temaModificado = {
         _id: req.body.id,
         titulo: req.body.titulo,
         descricao: req.body.descricao,
-        imagem: {
-            path: "", //fs.readFileSync(req.body.img.userPhoto.path),
-            caption: "" //'image/png'
-        }
+        imagem: tema.imagem
     }
-    Tema.findOneAndUpdate({
+
+    Evento.findOneAndUpdate({
         _id: temaModificado._id
     }, temaModificado).then(() => {
         console.log("Tema editado com sucesso")
     }).catch((err) => {
-        console.log("Houve um erro ao editar o tema: " + err)
+        console.log("Houve um erro ao editar o Tema: " + err)
     })
     res.redirect("/admin/tema")
+
+
 })
 
 //Apagar temas pelo _id
@@ -350,8 +377,38 @@ router.post('/deleteimg/:id', async (req, res) => {
     let evento = await Evento.findOne().where({ 'imagem.id': id })
 
     if (evento == '' || evento == null) {
-        console.log("Arquivo não encontrado")
-        res.json('Fail')
+
+        let tema = await Tema.findOne().where({ 'imagem.id': id })
+
+        if (tema == '' || tema == null) {
+            console.log("Arquivo não encontrado")
+            res.json('Fail')
+        } else {
+            //Encontra e remove o elemento do array da imagem
+            var index = tema.imagem.indexOf(tema.imagem.find(element => element.id == id))
+            let caminho = 'public/' + tema.imagem[index].path
+            try {
+                fs.unlinkSync(caminho);
+            } catch (error) {
+                console.log("ENTROU NO ERRROOOO")
+                res.json('ERROR param')
+            }
+            if (index > -1) {
+                tema.imagem.splice(index, 1);
+            }
+            console.log("tema a ser salvo: ")
+            console.log(tema)
+
+            //Atualiza o Banco de dados
+            Tema.findOneAndUpdate(
+                { 'imagem.id': id }
+                , tema).then(() => {
+                    console.log("tema editado com sucesso")
+                }).catch((err) => {
+                    console.log("Houve um erro ao editar o tema: " + err)
+                })
+        }
+
     } else {
         //Encontra e remove o elemento do array da imagem
         var index = evento.imagem.indexOf(evento.imagem.find(element => element.id == id))
